@@ -1,0 +1,35 @@
+
+http:
+  routers:
+    my-router:
+      rule: "Host(`docker.localhost`) && PathPrefix(`/`)" 
+      entryPoints:
+        - web
+        - web-secure
+      service: "my-service"
+      middlewares:
+        - redirect
+        - bot-ratelimit
+        - opa-go@file
+
+
+
+  services:
+    my-service:
+      loadBalancer:
+        servers:
+          - url: "http://docker.localhost:8080"
+
+  middlewares:
+    redirect:
+      redirectScheme:
+        scheme: https
+    opa-go:
+      plugin:
+        opa2:
+          headers:
+            user-agent: chrome    
+    bot-ratelimit:
+      rateLimit:
+        average: 15
+        burst: 30

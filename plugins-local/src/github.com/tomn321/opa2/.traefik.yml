@@ -1,0 +1,7 @@
+displayName: opa2
+type: middleware
+import: github.com/tomn321/opa2
+summary: 'Write plugin'
+testData:
+  Headers:
+    user-agent: chrome

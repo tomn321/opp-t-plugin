@@ -1,0 +1,72 @@
+
+version: "3.3"
+
+services:
+  traefik:
+    image: traefik:v2.10
+    #network_mode: host
+    container_name: traefik
+    networks:
+      - web
+      - web-secure      
+    ports:
+      - "80:80" # <== http
+      - "8080:8080" # <== :8080 is where the dashboard runs on
+      - "443:443"        
+    command:
+      - --api.insecure=true # <== Enabling insecure api, NOT RECOMMENDED FOR PRODUCTION
+      - --api.dashboard=true # <== Enabling the dashboard to view services, middlewares, routers, etc...
+      - --api.debug=true # <== Enabling additional endpoints for debugging and profiling
+      - --log.level=DEBUG # <== Setting the level of the logs from traefik
+      - --providers.docker.exposedbydefault=false # <== Don't expose every container to traefik, only expose enabled ones
+      - --providers.file.filename=/dynamic.yml # <== Referring to a dynamic configuration file
+      - --providers.docker.network=web # <== Operate on the docker network named web
+      - --entrypoints.web.address=:80 # <== Defining an entrypoint for port :80 named web      
+      - --entrypoints.web-secured.address=:443
+      - --accesslog=true
+      - --accesslog.filePath=/var/log/traefik/accessLogUserAgents.log
+      - --accesslog.format=json
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./dynamic.yml:/dynamic.yml:ro
+      - ./:/etc/traefik
+      - ./logs/:/var/log/traefik/
+      - ./plugins-local/:/plugins-local/
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true" # <== Enable traefik on itself to view dashboard and assign subdomain to view it
+      - "traefik.http.routers.traefik-https.rule=Host(`traefik.docker.localhost`)" # <== Setting the domain for the dashboard
+      - --providers.docker=true # <== Enabling docker as the provider for traefik
+      #- "traefik.http.routers.my-router.service=api@internal" # <== Enabling the api to be a service to access
+      - "traefik.http.routers.traefik-https.entrypoints=web-secure"
+      - "traefik.http.routers.traefik-https.tls=true"
+      - "traefik.http.routers.traefik-https.rule=PathPrefix(`/traefik`)"
+
+      
+  whoami:
+    image: traefik/whoami
+    restart: unless-stopped
+    networks:
+      - web
+      - web-secure
+    deploy:
+      mode: replicated
+      replicas: 3
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.whoami-http.entrypoints=web
+      - traefik.http.routers.whoami-http.rule=Host(`whoami.docker.localhost`)
+      - traefik.http.routers.whoami-http.rule=PathPrefix(`/whoami`)
+      - traefik.http.routers.whoami-https.rule=Host(`whoami.docker.localhost`)      
+      - traefik.http.routers.whoami-https.rule=PathPrefix(`/whoami`)
+      - traefik.http.routers.whoami-https.entrypoints=web-secure
+      - traefik.http.routers.whoami-https.tls=true
+      - traefik.http.routers.whoami-https.middlewares=opa-go@file
+      - traefik.http.middlewares.whoami-https.stripprefix.prefixes=/whoami
+  
+
+networks:
+  web:
+    external: true
+  web-secure:
+    external: true   

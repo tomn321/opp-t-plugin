@@ -1,0 +1,4 @@
+decision_endpoint: "http://docker.localhost:8181/v1/data/opa2/allow"
+query: "data.opa2.allow"
+headers:
+  User-Agent: "chrome"
