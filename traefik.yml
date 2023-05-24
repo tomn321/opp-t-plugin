@@ -11,16 +11,23 @@ log:
 accessLog:
   filePath: "/var/log/traefik/accessLog.log"
   format: json
+  filters:
+    statusCodes:
+      - "500"
+      - "400-404"
+      - "200" # probally best to turn off LOL
+    retryAttempts: true
+    minDuration: "10ms"
   fields:
-    defaultMode: drop
+    defaultMode: keep
     names:
-      ClientUsername: drop
+      ClientUsername: keep
     headers:
-      defaultMode: drop
+      defaultMode: keep
       names:
         User-Agent: keep # keep user-agent headers
-        Authorization: drop
-        Content-Type: drop
+        Authorization: keep
+        Content-Type: keep
 
 providers:
   docker:

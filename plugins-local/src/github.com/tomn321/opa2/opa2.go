@@ -33,7 +33,7 @@ func (u *Opa2) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	var allow bool = false // DEFAULT to NOT allow
 
-	blockedAgents := [4]string{"yandex", "petal", "bot", "postman"}
+	blockedAgents := [4]string{"yandex", "petal", "postman"}
 	for _, agent := range blockedAgents {
 		if strings.Contains(strings.ToLower(agentListString), agent) {
 			rw.WriteHeader(403) // FORBIDDEN

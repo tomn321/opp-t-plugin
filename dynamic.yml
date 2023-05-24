@@ -2,7 +2,7 @@
 http:
   routers:
     my-router:
-      rule: "Host(`docker.localhost`) && PathPrefix(`/`)" 
+      rule: "Host(`docker.localhost`) && PathPrefix(`/`)"
       entryPoints:
         - web
         - web-secure
@@ -10,6 +10,7 @@ http:
       middlewares:
         - redirect
         - bot-ratelimit
+        - bot-retrylimit
         - opa-go@file
 
 
@@ -28,8 +29,19 @@ http:
       plugin:
         opa2:
           headers:
-            user-agent: chrome    
+            user-agent: chrome
     bot-ratelimit:
       rateLimit:
         average: 15
         burst: 30
+    bot-retrylimit:
+      retry:
+        attempts: 4
+        initialInterval: 100ms
+
+  # middlewareChains:
+  #   block-bots:
+  #     middlewares:
+  #       - opa-go
+  #       - bot-ratelimit
+  #       - bot-retrylimit
