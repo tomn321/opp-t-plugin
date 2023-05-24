@@ -43,7 +43,7 @@ func (u *Opa2) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	for _, agent := range knownAgents {
 		if strings.Contains(strings.ToLower(agentListString), agent) {
 			allow = true
-			break // We found < 1 leave loop
+			break // We found 1 leave loop
 		}
 	}
 

@@ -44,6 +44,7 @@ api:
   insecure: true
 
 experimental:
-  localPlugins:
-    opa2:
-      moduleName: github.com/tomn321/opa2
+  plugins:
+    UAGuard:
+      moduleName: "github.com/tomn321/UAGuard"
+      version: "v0.0.1"

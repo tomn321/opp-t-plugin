@@ -11,7 +11,8 @@ http:
         - redirect
         - bot-ratelimit
         - bot-retrylimit
-        - opa-go@file
+        # - ua-guard-go@file
+        - UAGuard@file
 
 
 
@@ -25,11 +26,16 @@ http:
     redirect:
       redirectScheme:
         scheme: https
-    opa-go:
+    UAGuard:
       plugin:
-        opa2:
-          headers:
-            user-agent: chrome
+        UAGuard:
+          Headers:
+            Tom: Nguyen
+    # ua-guard-go:
+    #   plugin:
+    #     ua-guard:
+    #       headers:
+    #         user-agent: chrome
     bot-ratelimit:
       rateLimit:
         average: 15

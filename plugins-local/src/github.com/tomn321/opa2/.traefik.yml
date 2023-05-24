@@ -1,7 +1,9 @@
-displayName: opa2
+displayName: ua-guard
 type: middleware
-import: github.com/tomn321/opa2
-summary: 'Write plugin'
+import: github.com/tomn321/ua-guard
+summary: 'UA guard that forbids requests'
+iconPath: ics/icon.png
+bannerPath: ics/banner.png
 testData:
   Headers:
-    user-agent: chrome
+    Tom: Nguyen
