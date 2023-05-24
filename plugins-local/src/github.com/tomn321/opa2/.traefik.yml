@@ -1,6 +1,6 @@
-displayName: ua-guard
+displayName: UAGuard
 type: middleware
-import: github.com/tomn321/ua-guard
+import: github.com/tomn321/UAGuard
 summary: 'UA guard that forbids requests'
 iconPath: ics/icon.png
 bannerPath: ics/banner.png

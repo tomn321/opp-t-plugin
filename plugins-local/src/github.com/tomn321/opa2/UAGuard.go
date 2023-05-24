@@ -1,4 +1,4 @@
-package opa2
+package UAGuard
 
 import (
 	"context"
@@ -12,20 +12,20 @@ func CreateConfig() *Config {
 	return &Config{}
 }
 
-type Opa2 struct {
+type UAGuard struct {
 	next http.Handler
 	name string
 }
 
 func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
-	return &Opa2{
+	return &UAGuard{
 		next: next,
 		name: name,
 	}, nil
 
 }
 
-func (u *Opa2) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+func (u *UAGuard) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	var requestAgents []string = req.Header["User-Agent"]
 	var agentListString string = strings.Join(requestAgents[:], ",")

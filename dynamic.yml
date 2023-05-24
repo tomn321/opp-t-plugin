@@ -33,7 +33,7 @@ http:
             Tom: Nguyen
     # ua-guard-go:
     #   plugin:
-    #     ua-guard:
+    #     UAGuard:
     #       headers:
     #         user-agent: chrome
     bot-ratelimit:
